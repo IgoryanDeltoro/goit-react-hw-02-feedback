@@ -1,7 +1,7 @@
 import { Component } from 'react';
-import Button from './feedback/button/Button';
-import StatisticList from './feedback/StatisticList';
-import { FirstTitle, SecondTitle } from './feedback/Title';
+import FeedbackOptions from './feedback/FeedbackOptions/FeedbackOptions';
+import Statistic from './feedback/statistic/Statistic';
+import Section from './feedback/section/Section';
 
 class Feedback extends Component {
   state = {
@@ -12,37 +12,39 @@ class Feedback extends Component {
   };
 
   counterGoodFeedback = () => {
-    this.setState(prevState => ({ good: prevState.good + 1 }));
+    this.setState(({ good }) => ({ good: good + 1 }));
   };
   counterNeutralFeedback = () => {
-    this.setState(prevState => ({ neutral: prevState.neutral + 1 }));
+    this.setState(({ neutral }) => ({ neutral: neutral + 1 }));
   };
   counterBadFeedback = () => {
-    this.setState(prevState => ({ bad: prevState.bad + 1 }));
+    this.setState(({ bad }) => ({ bad: bad + 1 }));
   };
   countTotalFeedback = () => {
-    this.setState(({ good, neutral, bad }) => console.log(good));
+    this.setState(({ good, neutral, bad }) => ({
+      total: good + neutral + bad,
+    }));
   };
-  countPositiveFeedbackPercentage() {}
+  countPositiveFeedbackPercentage = () => {
+    this.setState(() => {});
+  };
 
   render() {
+    const { good, neutral, bad, total } = this.state;
     return (
-      <section>
-        <div>
-          <FirstTitle />
-          <Button
+      <>
+        <Section title={'Please leave feedback'}>
+          <FeedbackOptions
             onGood={this.counterGoodFeedback}
             onNeutral={this.counterNeutralFeedback}
             onBad={this.counterBadFeedback}
+            total={this.countTotalFeedback}
           />
-          <SecondTitle />
-          <StatisticList
-            goodStatis={this.state.good}
-            neutralStatis={this.state.neutral}
-            badStatis={this.state.bad}
-          />
-        </div>
-      </section>
+        </Section>
+        <Section title={'Statistic'}>
+          <Statistic good={good} neutral={neutral} bad={bad} total={total} />
+        </Section>
+      </>
     );
   }
 }
