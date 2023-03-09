@@ -1,16 +1,11 @@
-import countPositiveFeedbackPercentage from '../utils/pisitiveFeedbackCounter';
 import PropTypes from 'prop-types';
 import css from '../statistic/Statistic.module.css';
 import Notification from '../notification/Notification';
 
-const Statistic = ({ good, neutral, bad, total }) => {
-  const positiveFeedbackPercentage = countPositiveFeedbackPercentage(
-    total,
-    good
-  );
+const Statistic = ({ good, neutral, bad, total, percentage }) => {
   return (
     <ul className={css.list}>
-      {!total ? (
+      {!total() ? (
         <>
           <Notification message="There is no feedback"></Notification>
         </>
@@ -30,12 +25,12 @@ const Statistic = ({ good, neutral, bad, total }) => {
           </li>
           <li className={css.item}>
             <p className={css.description}>Total:</p>
-            <span className={css.span}>{total}</span>
+            <span className={css.span}>{total()}</span>
           </li>
           <li className={css.item}>
             <p className={css.description}>Positive feedback:</p>
             <span className={css.span}>
-              {!positiveFeedbackPercentage ? 0 : positiveFeedbackPercentage}%
+              {!percentage(total) ? 0 : percentage(total)}%
             </span>
           </li>
         </>
@@ -48,7 +43,7 @@ Statistic.protoType = {
   good: PropTypes.number.isRequired,
   neutral: PropTypes.number.isRequired,
   bad: PropTypes.number.isRequired,
-  total: PropTypes.number.isRequired,
+  total: PropTypes.func.isRequired,
 };
 
 export default Statistic;
